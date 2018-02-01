@@ -2,18 +2,45 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    // in react and a stateful function, it is asynchronous so it does have access to props right away
-    // set state so class prioritize and gives it access right away
-    this.state = {
-      videos: this.props.videos,
-      video: this.props.videos[0]
-
-
-    };  
     this.onVideoListEntryClick = this.onVideoListEntryClick.bind(this);
-
+    this.handleInput = this.handleInput.bind(this);
+    this.state = {
+      videos: [],
+      video: {
+        id: {videoId: 'videoId'},
+        snippet: {
+          title: 'title', 
+          description: 'description'
+        }        
+      }
+    };  
   }
     
+  componentDidMount() {
+    this.props.searchYouTube({
+      query: 'pikachu',
+      max: 5,
+      key: window.YOUTUBE_API_KEY
+    }, (data) => (this.setState({ 
+      videos: data,
+      video: data[0]
+    }))
+    );
+  }
+
+  handleInput(e) {
+    this.props.searchYouTube({
+      query: e.target.value,
+      max: 5,
+      key: window.YOUTUBE_API_KEY
+    }, (data) => (this.setState({ 
+      videos: data,
+      video: data[0]
+   
+    }))
+    );
+  }
+
   onVideoListEntryClick(video) {
     this.setState(
       {
@@ -22,13 +49,12 @@ class App extends React.Component {
     );
   }
       
-  
   render() {
     return (
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search />
+            <Search handleInput={this.handleInput} />
           </div>
         </nav> 
         <div className="row">
