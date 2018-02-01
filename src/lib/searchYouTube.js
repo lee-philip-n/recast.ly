@@ -1,37 +1,26 @@
 var searchYouTube = (options, callback) => {
-  var url = 'https://www.googleapis.com/youtube/v3';
-
-  $('btn hidden-sm-down').on('click', function() {
-    callback;
-  });
-    
-  // search: function() {
-  //   var query = $('.form-control').val();
-  //   this.collection.search(query);
-  // },
-
+  var url = 'https://www.googleapis.com/youtube/v3/search';
 
   $.ajax({
     url: url,
     type: 'GET',
     data: {
       part: 'snippet',
-      query: query,
-      max: 5,
+      q: options.query,
+      maxResults: options.max,
       type: 'video',
       videoEmbeddable: true,
-      key: window.YOUTUBE_API_KEY
+      key: options.key
     }, 
     success: function(data) {
-      console.log('data retrieved');
+      console.log('data retrieved');  
+      callback(data.items);
     },    
     error: function(data) {
       console.log('retrieval failed');
+      callback(data.items);
     }
-
-
   });
-
 };
 
 window.searchYouTube = searchYouTube;
